@@ -29,7 +29,7 @@ mutex(N, Queue) ->
 
 worker(N, Mutex) ->
     %timer:sleep(rand:uniform(50)),
-    PrintMsg = "Mutex acquired by ~B.~n",
+    PrintMsg = "~B acquired mutex.~n",
     Mutex ! {self(), p},
     receive
         ok ->

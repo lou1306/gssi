@@ -4,7 +4,7 @@
 
 
 mutex(N) ->
-    io:format("MUTEX --> ~B~n", [N]),
+    io:format("MUTEX: ~B~n", [N]),
     receive
         {From, p} when N > 0 ->
             From ! ok,
@@ -22,7 +22,7 @@ worker(N, Mutex) ->
     Mutex ! {self(), p},
     receive
         ok ->
-            io:format("Mutex acquired by ~B.~n", [N]),
+            io:format("~B acquired mutex.~n", [N]),
             io:format("Critical section...~n"),
             Mutex ! {self(), v};
         wait ->
