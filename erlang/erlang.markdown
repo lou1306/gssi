@@ -1,11 +1,6 @@
 ---
 title: "Concurrency in Erlang: an overview"
 subtitle: Modelling and Verification of Reactive Systems
-
-header-includes:
-  - \usepackage[absolute,overlay]{textpos}
-  - \setlength{\TPHorizModule}{1mm}
-  - \setlength{\TPVertModule}{1mm}
 onlynotes: false
 style: BeamerGSSI
 ---
@@ -15,25 +10,31 @@ style: BeamerGSSI
 * Developed at Ericsson in 1986; open source since 1998
     + Immutable data types
     + Pattern matching constructs
-    * Dynamic typing
-    * Message passing concurrency
+    + Dynamic typing
+    + Message passing concurrency
 
 * "Soft real-time" systems
 
 Some notable use cases[^users]:
 
+[columns]
+
+[column=0.7]
+
 * Facebook (chat backend)
 * Whatsapp
 * Networking hardware vendors
-    * Ericcson
-    * RAD
-    * Ubiquiti
+    + Ericcson
+    + RAD
+    + Ubiquiti
 
-\begin{textblock}{100}(100,65)
-    \includegraphics[width=0.2\textwidth]{img/erlang_logo}
-\end{textblock}
+[column=0.3]
 
-[^users]: <http://erlang.org/faq/introduction.html>, section *Who uses Erlang for product development?*
+![](img/erlang_logo.png) <!-- inline -->
+
+[/columns]
+
+[^users]: *Frequently Asked Questions about Erlang*, section *Who uses Erlang for product development?*. [*Link*](http://erlang.org/faq/introduction.html)
 
 # Basic concepts
 
@@ -147,6 +148,10 @@ Each process is garbage-collected separately.
 * Each has its own run-queue
 * \hl{Migration logic} redistributes processes[^smp]
 
+[columns]
+
+[column=0.6]
+
 A process is released when:
 
 * `receive`, but no pattern matches
@@ -157,9 +162,11 @@ A process is released when:
     + Sending/receiving messages
     + Garbage collection...
 
-\begin{textblock}{120}(75,25)
-    \includegraphics[width=0.35\textwidth]{img/smp.png}
-\end{textblock}
+[column=0.4]
+
+![](img/smp.png){width=85%} <!-- inline -->
+
+[/columns]
 
 [^smp]: K. Lundin, *About Erlang/OTP and Multi-core performance in particular,* Erlang Factory, 2009. [*Link*](http://www.erlang-factory.com/upload/presentations/105/KennethLundin-ErlangFactory2009London-AboutErlangOTPandMulti-coreperformanceinparticular.pdf).  
 H. Soleimani, *Erlang Scheduler details and why it matters,* 2016. [*Link*](https://hamidreza-s.github.io/erlang/scheduling/real-time/preemptive/migration/2016/02/09/erlang-scheduler-details.html)
@@ -240,6 +247,7 @@ proc_reg(Name) ->
 ~~~
 
 \normalsize
+
 Suppose that two processes try to run `proc_reg/1` concurrently...
 
 All BIFs (built-in functions) are atomic, but there is no construct to enforce
@@ -248,53 +256,48 @@ atomicity of a code block!
 [^race]: M. Christakis and K. Sagonas, *Static Detection of Deadlocks in Erlang,* 2010.
 [*Link*](https://www.it.uu.se/research/group/hipe/dialyzer/publications/races.pdf)
 
-# Simple mutex {.fragile}
+# Simple mutex
 
 \scriptsize
 
-\begin{columns}
-\hspace*{-3em}
-\begin{column}{0.38\textwidth}
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{mutex(}\VariableTok{N}\FunctionTok{)} \OperatorTok{->}
-  \FunctionTok{io:format(}\StringTok{"MUTEX: ~B~n"}\FunctionTok{,} \FunctionTok{[}\VariableTok{N}\FunctionTok{]),}
-  \KeywordTok{receive}
-    \FunctionTok{\{}\VariableTok{From}\FunctionTok{,} \CharTok{p}\FunctionTok{\}} \CharTok{when} \VariableTok{N} \OperatorTok{>} \DecValTok{0} \OperatorTok{->}
-      \VariableTok{From} \OperatorTok{!} \CharTok{ok}\FunctionTok{,} 
-      \FunctionTok{mutex(}\VariableTok{N}\OperatorTok{-}\DecValTok{1}\FunctionTok{);}
-    \FunctionTok{\{}\VariableTok{From}\FunctionTok{,} \CharTok{p}\FunctionTok{\}} \OperatorTok{->}
-      \VariableTok{From} \OperatorTok{!} \CharTok{wait}\FunctionTok{,}
-      \FunctionTok{mutex(}\VariableTok{N}\FunctionTok{);}
-    \FunctionTok{\{}\VariableTok{From}\FunctionTok{,} \CharTok{v}\FunctionTok{\}} \OperatorTok{->}
-      \VariableTok{From} \OperatorTok{!} \CharTok{ok}\FunctionTok{,}
-      \FunctionTok{mutex(}\VariableTok{N}\OperatorTok{+}\DecValTok{1}\FunctionTok{)}
-  \KeywordTok{end}\FunctionTok{.}
-\end{Highlighting}
-\end{Shaded}
+[columns]
 
-\end{column}
-\begin{column}{0.48\textwidth}
+[column=0.45]
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{worker(}\VariableTok{N}\FunctionTok{,} \VariableTok{Mutex}\FunctionTok{)} \OperatorTok{->}
-  \FunctionTok{timer:sleep(rand:uniform(}\DecValTok{50}\FunctionTok{)),}
-  \VariableTok{Mutex} \OperatorTok{!} \FunctionTok{\{self(),} \CharTok{p}\FunctionTok{\},}
-  \KeywordTok{receive}
-    \CharTok{ok} \OperatorTok{->} 
-      \FunctionTok{io:format(}\StringTok{"~B acquired mutex.~n"}\FunctionTok{,} \FunctionTok{[}\VariableTok{N}\FunctionTok{]),} 
-      \FunctionTok{io:format(}\StringTok{"Critical section...~n"}\FunctionTok{),} 
-      \VariableTok{Mutex} \OperatorTok{!} \FunctionTok{\{self(),} \CharTok{v}\FunctionTok{\};} 
-    \CharTok{wait} \OperatorTok{->} 
-      \FunctionTok{io:format(}\StringTok{"~B waiting.~n"}\FunctionTok{,} \FunctionTok{[}\VariableTok{N}\FunctionTok{]),} 
-      \FunctionTok{worker(}\VariableTok{N}\FunctionTok{,} \VariableTok{Mutex}\FunctionTok{)}
-  \KeywordTok{end}\FunctionTok{.}
-\end{Highlighting}
-\end{Shaded}
+~~~erlang
+mutex(N) ->
+  io:format("MUTEX: ~B~n", [N]),
+  receive
+    {From, p} when N > 0 ->
+      From ! ok,
+      mutex(N-1);
+    {From, p} ->
+      From ! wait,
+      mutex(N);
+    {From, v} ->
+      From ! ok,
+      mutex(N+1)
+  end.
+~~~
 
-\end{column}
-\end{columns}
+[column=0.55]
+
+~~~erlang
+worker(N, Mutex) ->
+  timer:sleep(rand:uniform(50)),
+  Mutex ! {self(), p},
+  receive
+    ok ->
+      io:format("~B acquired mutex.~n", [N]),
+      io:format("Critical section...~n"),
+      Mutex ! {self(), v};
+    wait ->
+      io:format("~B waiting.~n", [N]),
+      worker(N, Mutex)
+  end.
+~~~
+
+[/columns]
 
 \normalsize
 
@@ -302,73 +305,67 @@ atomicity of a code block!
 
 * Emulate synchronous communication via a simple messaging *protocol*
 
-# Slightly less simple mutex {.fragile}
-
-\begin{columns}
+# Slightly less simple mutex
 
 \scriptsize
-\begin{column}{0.42\textwidth}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{mutex(}\VariableTok{N}\FunctionTok{)} \OperatorTok{->}
-  \FunctionTok{mutex(}\VariableTok{N}\FunctionTok{,} \FunctionTok{queue:new()).}
-\FunctionTok{mutex(}\VariableTok{N}\FunctionTok{,} \VariableTok{Queue}\FunctionTok{)} \OperatorTok{->}
-  \FunctionTok{io:format(}\StringTok{"MUTEX --> ~B~n"}\FunctionTok{,} \FunctionTok{[}\VariableTok{N}\FunctionTok{]),}
-  \KeywordTok{case} \FunctionTok{(}\VariableTok{N}\OperatorTok{>}\DecValTok{0}\FunctionTok{)} \OperatorTok{and}
-  \OperatorTok{not} \FunctionTok{queue:is_empty(}\VariableTok{Queue}\FunctionTok{)} \KeywordTok{of} 
-    \CharTok{false} \OperatorTok{->} \CharTok{ok}\FunctionTok{;} 
-    \CharTok{true} \OperatorTok{->} 
-      \FunctionTok{\{\{}\CharTok{value}\FunctionTok{,} \VariableTok{Pid}\FunctionTok{\},} \VariableTok{QTail}\FunctionTok{\}} \OperatorTok{=}
-      \FunctionTok{queue:out(}\VariableTok{Queue}\FunctionTok{),} 
-      \VariableTok{Pid} \OperatorTok{!} \CharTok{ok}\FunctionTok{,} 
-      \FunctionTok{mutex(}\VariableTok{N}\OperatorTok{-}\DecValTok{1}\FunctionTok{,} \VariableTok{QTail}\FunctionTok{)}
-  \KeywordTok{end}\FunctionTok{,}
-  \KeywordTok{receive} 
-    \FunctionTok{\{}\VariableTok{From}\FunctionTok{,} \CharTok{p}\FunctionTok{\}} \CharTok{when} \VariableTok{N} \OperatorTok{>} \DecValTok{0} \OperatorTok{->} 
-      \VariableTok{From} \OperatorTok{!} \CharTok{ok}\FunctionTok{,} 
-      \FunctionTok{mutex(}\VariableTok{N}\OperatorTok{-}\DecValTok{1}\FunctionTok{,} \VariableTok{Queue}\FunctionTok{);}
-    \FunctionTok{\{}\VariableTok{From}\FunctionTok{,} \CharTok{p}\FunctionTok{\}} \OperatorTok{->} 
-      \VariableTok{From} \OperatorTok{!} \CharTok{wait}\FunctionTok{,} 
-      \FunctionTok{mutex(}\VariableTok{N}\FunctionTok{,} \FunctionTok{queue:in(}\VariableTok{From}\FunctionTok{,} \VariableTok{Queue}\FunctionTok{));}
-    \FunctionTok{\{}\VariableTok{From}\FunctionTok{,} \CharTok{v}\FunctionTok{\}} \OperatorTok{->} 
-      \VariableTok{From} \OperatorTok{!} \CharTok{ok}\FunctionTok{,} 
-      \FunctionTok{mutex(}\VariableTok{N}\OperatorTok{+}\DecValTok{1}\FunctionTok{,} \VariableTok{Queue}\FunctionTok{)}
-  \KeywordTok{end}\FunctionTok{.}
-\end{Highlighting}
-\end{Shaded}
+[columns]
 
-\end{column}
-\begin{column}{0.5\textwidth}
+[column=0.42]
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{worker(}\VariableTok{N}\FunctionTok{,} \VariableTok{Mutex}\FunctionTok{)} \OperatorTok{->}
-  \VariableTok{PrintMsg} \FunctionTok{=} \StringTok{"~B acquired mutex.~n"}\FunctionTok{,}
-  \VariableTok{Mutex} \OperatorTok{!} \FunctionTok{\{self(),} \CharTok{p}\FunctionTok{\},}
-  \KeywordTok{receive}
-    \CharTok{ok} \OperatorTok{->}
-      \FunctionTok{io:format(}\VariableTok{PrintMsg}\FunctionTok{,} \FunctionTok{[}\VariableTok{N}\FunctionTok{]);}
-    \CharTok{wait} \OperatorTok{->}
-      \FunctionTok{io:format(}\StringTok{"~B waiting.~n"}\FunctionTok{,} \FunctionTok{[}\VariableTok{N}\FunctionTok{]),}
-      \KeywordTok{receive} 
-        \CharTok{ok} \OperatorTok{->} \FunctionTok{io:format(}\VariableTok{PrintMsg}\FunctionTok{,} \FunctionTok{[}\VariableTok{N}\FunctionTok{])}
-      \KeywordTok{end}
-  \KeywordTok{end}\FunctionTok{,}
-  \FunctionTok{io:format(}\StringTok{"Critical section...~n"}\FunctionTok{),}
-  \VariableTok{Mutex} \OperatorTok{!} \FunctionTok{\{self(),} \CharTok{v}\FunctionTok{\}.}
-\end{Highlighting}
-\end{Shaded}
+~~~erlang
+mutex(N, Queue) ->
+  io:format("MUTEX --> ~B~n", [N]),
+  case (N>0) and 
+  not queue:is_empty(Queue) of
+    false -> ok;
+    true ->
+      {{value, Pid}, NewQueue} =
+        queue:out(Queue),
+      Pid ! ok,
+      mutex(N-1, NewQueue)
+  end,
+  receive
+    {From, p} when N > 0 ->
+      From ! ok,
+      mutex(N-1, Queue);
+    {From, p} ->
+      From ! wait,
+      mutex(N, queue:in(From, Queue));
+    {From, v} ->
+      From ! ok,
+      mutex(N+1, Queue)
+  end.
+~~~
+
+[column=0.5]
+
+~~~erlang
+worker(N, Mutex) ->
+  PrintMsg = "~B acquired mutex.~n",
+  Mutex ! {self(), p},
+  receive
+    ok ->
+      io:format(PrintMsg, [N]);
+    wait ->
+      io:format("~B waiting.~n", [N]),
+      receive 
+        ok -> io:format(PrintMsg, [N])
+      end
+  end,
+  io:format("Critical section...~n"),
+  Mutex ! {self(), v}.
+~~~
 
 \normalsize
-\begin{itemize}
-    \item FIFO-queued processes
-    \item Empty the queue, then process new messages
-    \item Notice the nested \texttt{receive}
-\end{itemize}
 
-\end{column}
-\end{columns}
+* FIFO-queued processes
+
+* Empty the queue, then process new messages
+
+* Notice the nested `receive`
+
+[/columns]
 
 # Dining Philosophers (1)
 
@@ -377,6 +374,10 @@ Five philosophers at a Chinese restaurant.
 There are only five chopsticks on the table!
 
 In order to eat, they agree to follow this behavior:
+
+[columns]
+
+[column=0.5]
 
 ~~~java
 while(1) {
@@ -389,9 +390,11 @@ while(1) {
 }
 ~~~
 
-\begin{textblock}{110}(75,40)
-  \includegraphics[width=0.4\textwidth]{img/diningphilosophers}
-\end{textblock}
+[column=0.5]
+
+![](img/diningphilosophers.jpeg){width=80%} <!-- inline -->
+
+[/columns]
 
 # Dining Philosophers (2)
 
