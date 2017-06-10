@@ -1,0 +1,23 @@
+{
+    "selector": "source.markdown",
+    "variants": [
+        {
+            "name": "beamer PDF",
+            "shell_cmd": "panzer -t beamer -o \"$file_base_name.pdf\" \"$file\" --latex-engine-opt=-shell-escape && open -a Skim \"$file_base_name.pdf\"",
+        },
+        {
+            "name": "beamer LaTeX",
+            "shell_cmd": "panzer -t beamer -o \"$file_base_name.latex\" \"$file\" --latex-engine-opt=-shell-escape",
+        },
+        {
+            "name": "PDF",
+            "shell_cmd": "panzer -t latex -o \"$file_base_name.pdf\" \"$file\" --latex-engine-opt=-shell-escape && open -a Skim \"$file_base_name.pdf\"",
+        },
+        {
+            "name": "LaTeX",
+            "shell_cmd": "panzer -t latex -o \"$file_base_name.latex\" \"$file\" --latex-engine-opt=-shell-escape",
+        }
+
+    ]
+}
+
