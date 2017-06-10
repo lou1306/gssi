@@ -1,0 +1,67 @@
+GSSI:
+  all:
+    metadata:
+      author: Luca Di Stefano
+      author-running: Luca Di Stefano
+      institute: Gran Sasso Science Institute, L'Aquila, Italy
+      institute-running: GSSI
+      email: luca.distefano@gssi.it
+    commandline:
+      smart: true
+      standalone: true
+
+BeamerGSSI:
+  parent:
+    - GSSI
+  all:
+    filter:
+      - run: latex_columns.py
+      - run: pandoc-citeproc
+      - run: pandoc_latex_environment.py
+    metadata:
+      latex-environment:
+        center: [center]
+    commandline:
+      latex-engine: "`xelatex`"
+      smart: true 
+      standalone: true
+  beamer:
+    template: gssi.beamer
+    postflight:
+      - run: buildnotes.sh
+  latex:
+    template: default.latex
+    metadata:
+      graphics: true
+      ignorenotes: true
+
+IeeeGSSI:
+  parent: GSSI
+  all:
+    metadata:
+      author:
+        - name: Luca Di Stefano
+          affiliation: Gran Sasso Science Institute (GSSI)
+          location: L'Aquila, Italy
+          email: luca.distefano@gssi.it
+      colorlinks: false
+      csl: ieee.csl
+      classoption:
+        - conference
+        - a4paper
+      numbersections: true
+  latex:
+    filter:
+      - run: pandoc-citeproc
+    template: ieee.latex
+
+LatexGSSI:
+  parent: IeeeGSSI
+  all:
+    metadata:
+      documentclass: scrartcl
+      colorlinks: false
+      csl: ieee.csl
+      numbersections: true
+  latex:
+    template: gssi.latex

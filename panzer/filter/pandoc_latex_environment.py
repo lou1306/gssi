@@ -1,0 +1,1 @@
+/usr/local/lib/python2.7/site-packages/pandoc_latex_environment.py
