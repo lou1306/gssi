@@ -1,10 +1,13 @@
 # GSSI stuff
 
-I will upload documents, code etc. written while I'm trying to get a PhD at [Gran Sasso Science Institute](http://gssi.it), L'Aquila, Italy.
+I will upload documents, code etc. written while I'm trying to get a PhD at 
+[Gran Sasso Science Institute](http://gssi.it), L'Aquila, Italy.
 
 ## Disclaimer
 
-This stuff is totally unofficial, and does not reflect the official opinion of GSSI. Responsibility for the information and views expressed herein lies entirely with the author.
+This stuff is totally unofficial, and does not reflect the official opinion
+of GSSI.
+Responsibility for the information and views expressed herein lies entirely with the author.
 
 ## License
 
