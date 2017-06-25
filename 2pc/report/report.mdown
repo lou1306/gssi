@@ -51,6 +51,9 @@ Section \ref{sec:hdl} describes the tools used to realize a boolean circuit that
 implements the rules of the game, while in Section \ref{sec:2pc} we show how to
 execute the actual two-party computation.
 
+Finally, Sections \ref{sec:tools} and \ref{sec:conclusions} review other
+software tools used in this work and present our conclusions. 
+
 # Overview of Garbled Circuit protocols \label{sec:gc}
 
 The concept of Garbled Circuits (GCs) is central to current implementations of
@@ -312,7 +315,7 @@ $ bin/garbled_circuit/TinyGarble --bob --scd_file rpssl.scd --input 2
 01 # Alice wins
 ~~~
 
-# Other tools and source code
+# Other tools and source code \label{sec:tools}
 
 TinyGarble has been compiled and executed on a VirtualBox virtual machine
 running the Xubuntu 16.04 operating system.
@@ -328,7 +331,7 @@ The full source code related to this report is available on GitHub.[^gh]
 
 [^gh]: `https://github.com/lou1306/gssi/tree/master/2pc`
 
-# Conclusions and future work
+# Conclusions and future work \label{sec:conclusions}
 
 We quickly reviewed the basics of a Garbled Circuit protocol.
 We used TinyGarble, a GC implementation based on JustGarble, to play a simple
