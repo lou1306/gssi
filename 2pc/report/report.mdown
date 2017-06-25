@@ -270,7 +270,7 @@ abstract components (“cells”).
 
 Line 5 performs the "technology mapping" step, where cells are replaced by logic
 gates.
-Finally, the `abc` command on Line 6 maps such gates to the architecture
+Finally, the `abc` command on line 6 maps such gates to the architecture
 described by the library `asic_cell_yosys_extended.lib`.
 
 # Two-party computation with TinyGarble and JustGarble \label{sec:2pc}
@@ -288,8 +288,8 @@ external 2PC framework: an example of such frameworks is TinyGarble
 In this section we will use TinyGarble to execute a 2PC between two processes
 running on the same machine, using the circuit we have synthesized in Section
 \ref{sec:hdl}.
-All the communication happens through the TCP protocol, therefore the same
-procedure can be in principle carried out on the Internet.
+All the communication happens through the TCP protocol and therefore the same
+procedure, in principle, can be carried out on the Internet.
 
 First of all we have to translate the netlist to a format compatible with
 JustGarble, called Simple Circuit Description (SCD) [@Bellare2013].
