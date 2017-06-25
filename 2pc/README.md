@@ -22,14 +22,16 @@ moves.
 
     $ python3 rpssl.py
     $ yosys script.ys
-    $ cd /path/to/TinyGarble
-    $ bin/scd/V2SCD_Main -i /path/to/rpssl_netlist.v -o rpssl.scd --log2std
+    $ /path/to/TinyGarble/bin/scd/V2SCD_Main -i /path/to/rpssl_netlist.v -o rpssl.scd --log2std
 
 Explanation:
 
 1. Generates `top.v` (behavioral Verilog description of the circuit)
 2. Generates `rpssl_netlist.v` (netlist)
-4. Turns the netlist into the SCD format used by JustGarble/TinyGarble
+3. Turns the netlist into the SCD format used by JustGarble/TinyGarble
+
+Notice that TinyGarlble needs **both** the `scd` and the `scd.map` files
+generated at step 3!
 
 An example game:
 
