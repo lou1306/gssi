@@ -7,7 +7,7 @@ commandline:
 date: null
 bibliography: biblio.bib
 header-includes:
-    - \usepackage{xcolor}
+    - \usepackage{fourier}
     - \usepackage{booktabs}
 
 abstract: |
