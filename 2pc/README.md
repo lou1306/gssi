@@ -44,7 +44,7 @@ An example game:
 The Yosys-generated netlist is available on EDA Playground: 
 <https://www.edaplayground.com/x/6DZS>.
 
-A more in-depth report is [here]().
+A more in-depth report is [here](https://github.com/lou1306/gssi/blob/master/2pc/report/report.pdf).
 
 ## References
 
