@@ -315,10 +315,99 @@ $ bin/garbled_circuit/TinyGarble --bob --scd_file rpssl.scd --input 2
 01 # Alice wins
 ~~~
 
+## Performance analysis
+
+By using the `--log2std` option we can obtain some information about the
+performance of the protocol:
+
+* Transfer label time
+* Total number of garbled gates and non-garbled XOR gates
+* Communication time
+* Garbling/evaluation time (depending on the party)
+* Total time
+
+All data are expressed in clock cycles.
+An execution of the RPSSL circuit yields the following results:
+
+\small
+
+~~~
+# Garbler
+$ bin/garbled_circuit/TinyGarble --alice --scd_file rpssl.scd --input 3 --log2std
+ INFO: Open Alice's server on port: 1234
+ INFO: Alice transfer labels time (cc) = 172421022   (cc/bit) = 5.74737e+07
+ INFO: Non-secret skipped non-XOR gates = 0 out of 29    (0%)
+ INFO: Total garbled non-XOR gates = 29
+ INFO: Alice communication time (cc) = 168177
+ INFO: Alice garbling time (cc) = 17130
+ INFO: Alice's output = 0
+ INFO: Total Alice time (cc) = 175253795
+0
+
+#Evaluator
+$ bin/garbled_circuit/TinyGarble --bob --scd_file rpssl.scd --input 2 --log2std
+ INFO: Connect Bob\'s client to Alice's server on 127.0.0.1:1234
+ INFO: Bob transfer labels time (cc) = 155361783 (cc/bit) = 5.17873e+07
+ INFO: Bob communication time (cc) = 683547
+ INFO: Bob evaluation time (cc) = 16617
+ INFO: Bob's output = 01
+ INFO: Total Bob time (cc) = 156954921
+01 # Again, Alice wins (Spock smashes Scissors)
+~~~
+
+\normalsize
+
+By using the `time` Unix utility we can also measure the execution time of the
+"Bob" process and obtain an estimate of the average CPU clock frequency.
+
+Table \ref{tbl:time} shows the results of 5 consecutive runs.
+We have to stress that the test has been performed on a virtual machine (cf.
+Section \ref{sec:tools} for the details): results in a native environment might 
+be better.
+
+  Run     Clock Cycles     `time` output (s)      Avg. clock frequency (GHz)
+-----   --------------    ------------------    ----------------------------
+    1       47,313,222                 0.029                           1.631
+    2       24,182,856                 0.021                           1.151
+    3      104,967,168                 0.046                           2.282
+    4       52,677,702                 0.025                           2.107
+    5       51,740,055                 0.028                           1.848
+ (Avg)      56,176,201                 0.030                           1.804
+----------------------------------------------------------------------------
+
+Table: Measured execution times for the "Bob" process. \label{tbl:time}
+
+Moreover, we can have a clear view of the communication between the two
+processes by running the Wireshark packet sniffing tool [^wireshark].
+
+We start a capture on the loopback device (`lo0`) before running the TinyGarble
+processes.
+Table \ref{tbl:net} shows the results of the WireShark capture.
+Data have been computed as follows:
+
+* The **Conversations** tool under the **Statistics** menu shows the amount of
+  packets and bytes exchanged between the two parties;
+* The **Sequence Number** field in the headers of TCP packets can be used to
+  compute the total length of the payload in a given direction (Alice
+  $\rightarrow$ Bob or Bob $\rightarrow$ Alice).
+
+&nbsp;                Total    Alice $\rightarrow$ Bob   Bob $\rightarrow$ Alice
+-----------         -------   ------------------------  ------------------------
+**Packets**             177                         96                        81
+**Bytes (Total)**     15546                       9760                      5786
+**Bytes (Payload)**    3851                       3417                       434
+--------------------------------------------------------------------------------
+
+Table: Network traffic between the "Alice" and "Bob" TinyGarble processes. \label{tbl:net}
+
+[^wireshark]: `https://www.wireshark.org/`
+
 # Other tools and source code \label{sec:tools}
 
 TinyGarble has been compiled and executed on a VirtualBox virtual machine
 running the Xubuntu 16.04 operating system.
+The physical hardware is a 2015 MacBook Pro laptop, equipped with an Intel 
+i5-5257U CPU. The nominal clock frequency is 2.70GHz.
 The behavior of the `rpssl_netlist.v` synthesized circuit has been verified with
 the online tool EDA Playground.[^eda]
 
@@ -327,7 +416,8 @@ the online tool EDA Playground.[^eda]
 account; alternatively, one can download it and use the free tool Icarus Verilog
 (`http://iverilog.icarus.com/`) to execute it.
 
-The full source code related to this report is available on GitHub.[^gh]
+The full source code related to this report, as well as the Wireshark capture
+data, is available on GitHub.[^gh]
 
 [^gh]: `https://github.com/lou1306/gssi/tree/master/2pc`
 
