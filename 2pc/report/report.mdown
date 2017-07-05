@@ -359,6 +359,8 @@ $ bin/garbled_circuit/TinyGarble --bob --scd_file rpssl.scd --input 2 --log2std
 
 By using the `time` Unix utility we can also measure the execution time of the
 "Bob" process and obtain an estimate of the average CPU clock frequency.
+We did not measure Alice's execution time since its process basically behaves as 
+a server: hence most time is spent waiting for Bob's incoming connection.
 
 Table \ref{tbl:time} shows the results of 5 consecutive runs.
 We have to stress that the test has been performed on a virtual machine (cf.
@@ -395,7 +397,7 @@ Data have been computed as follows:
 -----------         -------   ------------------------  ------------------------
 **Packets**             177                         96                        81
 **Bytes (Total)**     15546                       9760                      5786
-**Bytes (Payload)**    3851                       3417                       434
+**Bytes (Payload)**    3850                       3417                       433
 --------------------------------------------------------------------------------
 
 Table: Network traffic between the "Alice" and "Bob" TinyGarble processes. \label{tbl:net}
