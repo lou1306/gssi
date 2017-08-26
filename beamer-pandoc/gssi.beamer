@@ -1,4 +1,23 @@
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(handout)$handout,$endif$$if(beamer)$ignorenonframetext,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+
+$if(onlynotes)$
+\setbeameroption{show only notes}
+\usepackage{version}
+\excludeversion{textblock}
+\renewcommand{\includegraphics}[2][]{}
+
+\makeatletter
+\def\beamer@framenotesbegin{% at beginning of slide
+  \gdef\beamer@noteitems{}%
+  \gdef\beamer@notes{{}}% used to be totally empty.
+}
+\makeatother
+$endif$
+
+
+\newcommand{\highlight}[1]{\textbf{\color{gssiorangeOpposite}#1}}
+\newcommand{\hl}[1]{\highlight{{#1}}}
+
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
@@ -219,8 +238,9 @@ $if(dir)$
   \newenvironment{LTR}{\beginL}{\endL}
 \fi
 $endif$
-$for(header-includes)$
-$header-includes$
+
+$for(headerincludes)$
+$headerincludes$
 $endfor$
 
 $if(title)$
@@ -259,7 +279,7 @@ $endif$
 \usepackage{multirow}
 
 %%%%%%%%%%%%%%%%%%%%GSSI
-\titlegraphic{\includegraphics[height=1.5cm]{logo-gssi.png}%\hfill%\includegraphics[height=1.5cm]{logo-infn.png}
+\titlegraphic{\includegraphics[height=1.5cm]{/Users/luca/.pandoc/logo-gssi.png}%\hfill%\includegraphics[height=1.5cm]{logo-infn.png}
 }
 \setbeamercovered{transparent}
 \mode<presentation>
@@ -303,8 +323,6 @@ $endif$
 
 \setbeamertemplate{sections/subsections in toc}[circle]
 
-\newcommand{\highlight}[1]{\textbf{\color{gssiorangeOpposite}#1}}
-\newcommand{\hl}[1]{\highlight{{#1}}}
 %%%%%%%%%%%%%%%%%%%%
 
 
@@ -333,8 +351,8 @@ $endif$
 
 $for(include-before)$
 $include-before$
-
 $endfor$
+
 $if(toc)$
 \begin{frame}
 \tableofcontents[hideallsubsections]
