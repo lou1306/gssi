@@ -1,0 +1,195 @@
+%==============================================================================
+% Beamer style for the poster template posted at
+% http://www.nathanieljohnston.com/2009/08/latex-poster-template/
+%
+% Created by the Computational Physics and Biophysics Group at Jacobs University
+% https://teamwork.jacobs-university.de:8443/confluence/display/CoPandBiG/LaTeX+Poster
+% Modified by Nathaniel Johnston (nathaniel@nathanieljohnston.com) in August 2009
+% Adapted for GSSI by Luca Di Stefano (luca.distefano@gssi.it) in 2017
+% =============================================================================
+
+\ProvidesPackage{beamerthemegssiposter}
+\RequirePackage{tikz}		% for drawing the nice rounded boxes
+\usetikzlibrary{arrows,backgrounds}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage{textcomp}
+\RequirePackage{amsmath,amssymb}
+\usefonttheme{professionalfonts}
+\newcommand{\makeruleinbox}{{\usebeamercolor[bg]{block alerted title}\centering\hspace*{-0.7cm}\rule{\inboxrule}{0.5cm}}}
+\usepackage{ragged2e}
+
+%-----------------------------------------------------------
+% Define a whole bunch of custom colours and fonts
+%-----------------------------------------------------------
+
+\definecolor{lgreen} {RGB}{180,210,100}
+\definecolor{dblue}  {RGB}{20,66,129}
+\definecolor{ddblue} {RGB}{11,36,69}
+\definecolor{lred}   {RGB}{220,0,0}
+\definecolor{nred}   {RGB}{224,0,0}
+\definecolor{norange}{RGB}{230,120,20}
+\definecolor{nyellow}{RGB}{255,221,0}
+\definecolor{ngreen} {RGB}{98,158,31}
+\definecolor{dgreen} {RGB}{78,138,21}
+\definecolor{nblue}  {RGB}{28,130,185}
+\definecolor{jblue}  {RGB}{20,50,100}
+
+\definecolor{gssiorange}{HTML}{F77100}
+\definecolor{gssiorangeone}{HTML}{F78100}
+\definecolor{gssiorangetwo}{HTML}{F79100}
+
+\definecolor{gssiorangeOpposite}{HTML}{088EFF}
+\definecolor{gssiorangeoneOpposite}{HTML}{087EFF}
+\definecolor{gssiorangetwoOpposite}{HTML}{086EFF}
+
+
+
+% set the basic colors
+\setbeamercolor{palette primary}   {fg=black,bg=white}
+\setbeamercolor{palette secondary} {fg=black,bg=white}
+\setbeamercolor{palette tertiary}  {bg=jblue,fg=white}
+\setbeamercolor{palette quaternary}{fg=black,bg=white}
+\setbeamercolor{structure}{fg=jblue}
+\setbeamercolor{titlelike}         {bg=jblue,fg=white}
+\setbeamercolor{frametitle}        {bg=jblue!10,fg=jblue}
+\setbeamercolor{cboxb}{fg=black,bg=gssiorangetwoOpposite}
+\setbeamercolor{cboxr}{fg=black,bg=red}
+
+% set colors for itemize/enumerate
+\setbeamercolor{item}{fg=gssiorangetwoOpposite}
+\setbeamercolor{item projected}{fg=white,bg=gssiorangetwoOpposite}
+
+% set colors for blocks
+\setbeamercolor{block title}{fg=gssiorange,bg=white}
+\setbeamercolor{block body}{fg=black,bg=white}
+
+% set colors for alerted blocks (blocks with frame)
+
+\setbeamercolor{block alerted title}{fg=gssiorange,bg= gssiorange!10} 
+\setbeamercolor{block alerted body}{fg= black,bg= gssiorange!5}
+
+% set the fonts
+\setbeamerfont{section in head/foot}{series=\bfseries}
+\setbeamerfont{block title}{series=\bfseries}
+\setbeamerfont{block alerted title}{series=\bfseries}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamerfont{frametitle}{size=\Large}
+\setbeamerfont{block body}{series=\rmfamily}
+\setbeamerfont{block body example}{series=\rmfamily}
+\setbeamerfont{caption}{series=\rmfamily}
+
+% set some beamer theme options
+\setbeamertemplate{title page}[default][colsep=-4bp,rounded=true]
+\setbeamertemplate{sections/subsections in toc}[square]
+\setbeamertemplate{items}[circle]
+\setbeamertemplate{blocks}[width=0.0]
+\beamertemplatenavigationsymbolsempty
+
+% set bibliography style
+\setbeamertemplate{bibliography item}[text]
+\setbeamercolor{bibliography item}{fg=black,bg=white}
+\setbeamercolor{bibliography entry author}{fg=black,bg=white}
+\setbeamercolor{bibliography item}{fg=black,bg=white}
+
+
+\setbeamercolor{description item}{fg = gssiorangeOpposite}
+
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{itemize subitem}[default]
+\setbeamertemplate{itemize subsubitem}[default]
+
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{enumerate subitem}[default]
+\setbeamertemplate{enumerate subsubitem}[default]
+
+
+
+
+% define some length variables that are used by the template
+\newlength{\inboxwd}
+\newlength{\iinboxwd}
+\newlength{\inboxrule}
+\makeatletter
+\makeatother
+
+%==============================================================================
+% build the poster title
+%==============================================================================
+\setbeamertemplate{headline}{
+ \leavevmode
+  \begin{columns}
+   \begin{column}{\linewidth}
+    \vskip1cm
+    \centering
+    \usebeamercolor{title in headline}{\color{gssiorangetwoOpposite}\Huge{\textbf{\inserttitle}}\\[0.5ex]}
+    \usebeamercolor{author in headline}{\color{fg}\Large{\insertauthor}\\[1ex]}
+    \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}\\[1ex]}
+    \vskip1cm
+   \end{column}
+   \vspace{1cm}
+  \end{columns}
+ \vspace{0.5in}
+ \hspace{0.5in}\begin{beamercolorbox}[wd=47in,colsep=0.15cm]{cboxb}\end{beamercolorbox}
+ \vspace{0.1in}
+}
+
+% Block definition
+\setbeamertemplate{block begin}
+{
+  \par\vskip\medskipamount
+  \begin{beamercolorbox}[colsep*=0ex,dp={2ex},center]{block title}
+    \vskip-0.25cm
+    \usebeamerfont{block title}\large\insertblocktitle
+    \vskip-0.5cm
+    \rule{0.75\linewidth}{1pt}
+    \vskip0.25cm
+  \end{beamercolorbox}
+  {\parskip0pt\par}
+  \ifbeamercolorempty[bg]{block title}
+  {}
+  {\ifbeamercolorempty[bg]{block body}{}{\nointerlineskip\vskip-0.5pt}}
+  \usebeamerfont{block body}
+  \vskip-0.5cm
+  \begin{beamercolorbox}[colsep*=0ex,vmode]{block body}
+  \justifying
+}
+
+\setbeamertemplate{block end}
+{
+  \end{beamercolorbox}
+  \vskip\smallskipamount
+}
+
+% Alert block definition (with frame)
+\setbeamertemplate{block alerted begin}
+{
+  \par\vskip\medskipamount
+  \begin{beamercolorbox}[sep=0ex,rounded=true,center,dp={2ex}]{block alerted title}
+    \vskip0.03cm
+    \usebeamerfont{block title}\large\insertblocktitle
+  \end{beamercolorbox}
+  {\parskip0pt\par}
+  \usebeamerfont{block body}
+  \vskip-0.5cm
+  \begin{beamercolorbox}[sep=0.5cm, rounded=true,center]{block alerted title}
+  \setlength{\inboxwd}{\linewidth}
+  \addtolength{\inboxwd}{-1cm}
+  \begin{beamercolorbox}[rounded=true,wd={\inboxwd},center]{block alerted body}
+  \setlength{\iinboxwd}{\inboxwd}
+  \setlength{\inboxrule}{\inboxwd}
+  \addtolength{\iinboxwd}{-0.5cm}
+  \addtolength{\inboxrule}{0.5cm}
+  \begin{center}
+  \begin{minipage}{\iinboxwd}
+  \justifying
+}
+
+\setbeamertemplate{block alerted end}
+{
+  \end{minipage}
+  \end{center}
+  \end{beamercolorbox}
+  \end{beamercolorbox}
+  \vskip\smallskipamount
+}
