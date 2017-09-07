@@ -1,4 +1,4 @@
-# (Unofficial) GSSI Beamer poster Template
+# (Unofficial) GSSI Beamer poster template
 
 This is a slight modification of the 
 [Jabobs University portrait poster template](https://www.overleaf.com/latex/templates/portrait-beamer-poster-template-jacobs-style/fxfzyznxpghw)
@@ -7,6 +7,10 @@ The main difference with the original file is a separate section for references,
 contact information, and logos.
 I also tweaked the theme and the main LaTeX file a bit to make it a little
 easier to navigate (hopefully).
+
+## How does it look like?
+
+[Here you go!](https://github.com/lou1306/gssi/blob/master/gssi-beamer-poster/poster_lorem.pdf)
 
 ## Useful links 
 
