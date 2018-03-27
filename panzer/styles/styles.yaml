@@ -6,6 +6,7 @@ GSSI:
       institute: Gran Sasso Science Institute, L'Aquila, Italy
       institute-running: GSSI
       email: luca.distefano@gssi.it
+      papersize: a4paper
     commandline:
       smart: true
       standalone: true
@@ -35,8 +36,22 @@ BeamerGSSI:
       graphics: true
       ignorenotes: true
 
-IeeeGSSI:
-  parent: GSSI
+LatexGSSI:
+  parent: 
+    - GSSI
+  all:
+    metadata:
+      classoption:
+        - fontsize=12pt
+        - DIV=calc
+      documentclass: article
+      colorlinks: false
+      csl: ieee.csl
+      numbersections: true
+  latex:
+    template: gssi.latex
+
+Ieee:
   all:
     metadata:
       author:
@@ -54,14 +69,3 @@ IeeeGSSI:
     filter:
       - run: pandoc-citeproc
     template: ieee.latex
-
-LatexGSSI:
-  parent: IeeeGSSI
-  all:
-    metadata:
-      documentclass: scrartcl
-      colorlinks: false
-      csl: ieee.csl
-      numbersections: true
-  latex:
-    template: gssi.latex
