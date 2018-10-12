@@ -4,7 +4,7 @@
 developed by Sam Kass and Karen Bryla, and popularized by the sitcom "The Big 
 Bang Theory".
 
-This is an implementation that allows a game of RPSSL between two players with
+This is an implementation that allows two users to play a game of RPSSL with
 no need for a trusted third party.
 
 To achieve this goal, we describe the game as a boolean circuit and we use a
